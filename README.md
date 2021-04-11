@@ -7,8 +7,11 @@ CurrentState:
 	Create Virtual Multi-Desktop via filter driver:√
 	Get desktop frame via Windows.Capture api:√
 	Get and Transmit inclinometer data of your phone to desktop via bluetooth:√
-	Encode frame as H264 stream:……
-
+	Encode frame as H264 stream:working
+	Transmit H264 package via TCP SOCKET on USB:waiting
+	Play H264 stream and adjust picture location by headset buttons:waiting
+	Programmly create adb service after detecting Headset connection on USB:waiting
+	
 Problem:
 
 	1.Using Windows.Media.Transcode Class to finish stream-encoding job, which is originally desigened to transcode into file
