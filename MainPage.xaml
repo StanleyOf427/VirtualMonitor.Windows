@@ -1,0 +1,47 @@
+﻿<Page
+    x:Class="VirtualMonitor_S.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VirtualMonitor_S"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="PreviewGrid" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,60,0,40"/>
+        <TextBlock Name="HMDInfTextBlock" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Text="{x:Bind _response,Mode=TwoWay}" FontSize="22"/>
+        <TextBlock Name="ControTextBlock" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="目前无连接的控制器" FontSize="22"/>
+        <Button Name="HMDConnButton"  Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="60" Margin="30,0,0,0" Content="点击连接" Click="HMDConnButton_Click"/>
+        <!--#region 临时-->
+      
+<!--#endregion-->
+        <Button Name="ControConnButton"  Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Width="120" Height="60"  Margin="0,0,30,0"  Content="点击连接" Click="ControConnButton_Click"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,200,0" Text="选择显示器数量：" FontSize="22"/>
+        <ComboBox Name="MonitorNumComBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="100,0,0,0" SelectedIndex="0">
+            <ComboBoxItem Name="ComboItem1">1</ComboBoxItem>
+            <ComboBoxItem Name="ComboItem2">2</ComboBoxItem>
+            <ComboBoxItem Name="ComboItem3">3</ComboBoxItem>
+            <ComboBoxItem Name="ComboItem4">4</ComboBoxItem>
+        </ComboBox>
+        <Button Name="StartButton" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top" Content="生成屏幕空间" IsEnabled="True" Height="60" Width="120" Margin="0,40,0,0" Click="StartButton_Click"/>
+        <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,0,0,20" Text="在头显端按动上下按钮控制屏幕大小，按动左右按钮调节曲度"/>
+
+        <!--<MediaPlayerElement x:Name="PlaybackVideo" Grid.Column="2" Grid.Row="2"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
+        <MediaPlayerElement x:Name="PreviewPlayer" Grid.Column="2" Grid.Row="2" Margin="15" AutoPlay="True" AreTransportControlsEnabled="True">
+            <MediaPlayerElement.TransportControls>
+                <MediaTransportControls IsFullWindowEnabled="False" IsFullWindowButtonVisible="False"  />
+            </MediaPlayerElement.TransportControls>
+        </MediaPlayerElement>
+    </Grid>
+</Page>
