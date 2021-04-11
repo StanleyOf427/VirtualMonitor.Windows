@@ -6,6 +6,7 @@ CurrentState:
 	TCP SOCKET Communicate with Headset via adb forward command：√
 	Create Virtual Multi-Desktop via filter driver:√
 	Get desktop frame via Windows.Capture api:√
+	Get and Transmit inclinometer data of your phone to desktop via bluetooth:√
 	Encode frame as H264 stream:……
 
 Problem:
