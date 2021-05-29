@@ -10,6 +10,7 @@ CurrentState:
 	Encode frame as H264 stream:working
 	Transmit H264 package via TCP SOCKET on USB:waiting
 	Play H264 stream and adjust picture location by headset buttons:waiting
+	resize the frame pool dynamically:waiting
 	Programmly create adb service after detecting Headset connection on USB:waiting
 	
 Problem:
