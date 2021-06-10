@@ -24,8 +24,9 @@
         <TextBlock Name="ControTextBlock" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="目前无连接的控制器" FontSize="22"/>
         <Button Name="HMDConnButton"  Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="120" Height="60" Margin="30,0,0,0" Content="点击连接" Click="HMDConnButton_Click"/>
         <!--#region 临时-->
-      
-<!--#endregion-->
+        <TextBlock Name="InfTextBlock" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+           FontSize="16">结果:</TextBlock>
+        <!--#endregion-->
         <Button Name="ControConnButton"  Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Width="120" Height="60"  Margin="0,0,30,0"  Content="点击连接" Click="ControConnButton_Click"/>
         <TextBlock Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,200,0" Text="选择显示器数量：" FontSize="22"/>
         <ComboBox Name="MonitorNumComBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="100,0,0,0" SelectedIndex="0">

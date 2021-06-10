@@ -48,6 +48,7 @@ using Windows.Media;
 using Windows.Media.MediaProperties;
 using Microsoft.Samples.SimpleCommunication;
 using System.Threading;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace VirtualMonitor_S
 {
@@ -63,8 +64,8 @@ namespace VirtualMonitor_S
         private CaptureEncode _encoder;
         private IRandomAccessStream _encoderStream;
         private GraphicsCaptureItem _item;
-        private uint FrameRate = 60;
-        private uint ByteRate = 3000000;
+        private uint FrameRate = 75;
+        private uint ByteRate = 35000000;
 
         private string res= "目前无连接的头显";
         private string _response { get { return res; }set { if (value != res) { res = value; NotifyPropertyChanged(); } } }
@@ -119,38 +120,62 @@ namespace VirtualMonitor_S
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        private async void HMDConnButton_Click(object sender, RoutedEventArgs e)
+        private async void HMDConnButton_Click(object sender, RoutedEventArgs e)    
         {
             HMDConnButton.IsEnabled = false;
 
             //buffer = new byte[ByteRate/FrameRate*60*10];//存储10s需要的大小
-            buffer = new byte[1395*1024*3];
-            _stream = new MemoryStream(buffer);
-            _stream.Seek(0, SeekOrigin.Begin);
-            
-            StopWatch.Interval = TimeSpan.FromSeconds(4);
+            //buffer = new byte[1395 * 1024 * 30];
+            //_stream = new MemoryStream(buffer);
+            //_stream.Seek(0, SeekOrigin.Begin);
+
+            StopWatch.Interval = TimeSpan.FromSeconds(6);
             StopWatch.Tick += Time_Tick;
             StopWatch.Start();
 
             //testWrite();
 
-            if (_item != null)
+            //if (_item != null)
+            //{
+            //    _encoder = new CaptureEncode(_device, _preview.Target);
+            //    file = await GetTempFileAsync();
+            //    try
+            //    {
+            //        _encoderStream = await file.OpenAsync(FileAccessMode.ReadWrite);
+            //        await _encoder.EncodeAsync(_encoderStream, 1920, 1080, ByteRate, FrameRate);
+            //        //await _encoder.EncodeAsync(_stream.AsRandomAccessStream(), 1920, 1080, ByteRate, FrameRate);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debugger.Break();
+            //    }
+            //}
+            HMDConnButton.IsEnabled = true;
+
+
+
+            ///解析MP4文件
+            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/test.mp4"));
+            buffer = new byte[42 * 1024 * 1024];
+
+            //_stream = new MemoryStream(buffer);
+            //_stream.Seek(0, SeekOrigin.Begin);
+
+            try
             {
-                _encoder = new CaptureEncode(_device, _preview.Target);
-                file = await GetTempFileAsync();
-                try
+                using (Stream stream = await file.OpenStreamForReadAsync())
                 {
-                    //_encoderStream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                    //await _encoder.EncodeAsync(_encoderStream, 1920, 1080, ByteRate, FrameRate);
-                    await _encoder.EncodeAsync(_stream.AsRandomAccessStream(), 1920, 1080, ByteRate, FrameRate);
-                }
-                catch (Exception ex)
-                {
-                    Debugger.Break();
+                    stream.Read(buffer, 0, (int)stream.Length);
                 }
             }
-            HMDConnButton.IsEnabled = true;
+            catch (Exception ex)
+            {
+                Debugger.Break();
+            }
+            //_stream.Dispose();
+            AnalyseData(buffer);
         }
+
 
         #region 测试
         private async void Time_Tick(object sender, object e)
@@ -162,7 +187,7 @@ namespace VirtualMonitor_S
 
             //var file = await GetTempFileAsync();
             //var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-            await FileIO.WriteBytesAsync(file, buffer);
+            //await FileIO.WriteBytesAsync(file, buffer);
             //stream.Dispose();
             //MediaPlayer player = new MediaPlayer();
             //PlaybackVideo.SetMediaPlayer(player);
@@ -193,6 +218,38 @@ namespace VirtualMonitor_S
             var file = await folder.CreateFileAsync($"{name}.mp4");
             return file;
         }
+
+        private void AnalyseData(byte[] data)
+        {
+            //起始位置,值应该是00
+            int i0 = 80, i1, i2, i3;
+            int length, count = 0;
+            int[] header=new int[14];
+            try
+            {
+                while (i0 < data.Length)
+                {
+                    i1 = i0 + 1; i2 = i0 + 2; i3 = i0 + 3;
+                    length = (data[i0] << 24) + (data[i1] << 16) + (data[i2] << 8) + data[i3];
+
+                    if (length == 0) { Debug.WriteLine( "\n" + "遇到0,停止推进,当前NALU个数:" + count.ToString() + 
+                        "\nI帧个数：" + header[5].ToString() +"，非I帧： "+(header[1]+header[2]+header[3]+header[4]).ToString()+
+                        ", SPS：" + header[7]+", "+", PPS： "+header[8]+"，SEI： "+header[6]+"，其他： "+header[0]); break; }
+                    else {
+                        i0 += length+4; count++;Debug.WriteLine(" "+length.ToString()+","); 
+                        if ((data[i3 + 1] & 0x1F) >= 1 && (data[i3 + 1] & 0x1F) <= 13)
+                            header[data[i3 + 1] & 0x1F]++;
+                        else
+                            header[0]++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debugger.Break();
+            }
+        }
+
         #endregion
 
         private void ControConnButton_Click(object sender, RoutedEventArgs e)

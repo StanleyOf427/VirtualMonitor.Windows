@@ -34,7 +34,7 @@ namespace VirtualMonitor_S
         private SharpDX.Direct3D11.Texture2D _blankComposeTexture;//填补空白
         private SharpDX.Direct3D11.Texture2D _tarComposeTexture;
 
-
+        
         private SharpDX.Direct3D11.RenderTargetView _composeRenderTargetView;
         private float _oripitch = 0, _oriroll = 0, _oriyaw = 0;
 
@@ -259,7 +259,7 @@ namespace VirtualMonitor_S
         {
             _closedEvent.Set();
         }
-
+        
         private void OnFrameArrived(Direct3D11CaptureFramePool sender, object args)
         {
             #region 帧池动态重构 暂存
@@ -364,6 +364,7 @@ namespace VirtualMonitor_S
 
                     result.Surface = Direct3D11Helpers.CreateDirect3DSurfaceFromSharpDXTexture(copyTexture);
                 }
+                
             }
             return result;
         }
